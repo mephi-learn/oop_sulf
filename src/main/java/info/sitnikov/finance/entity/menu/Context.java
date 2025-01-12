@@ -120,7 +120,7 @@ public final class Context implements Output, Input {
     public Number selectNumberDefault(String text, Number defaultValue) {
         Optional<Number> number;
         while (true) {
-            output.print(text + " [%d]", defaultValue);
+            output.print(text + " [%.2f]", Math.abs(defaultValue.doubleValue()));
             output.print(" > ");
             number = input.inputNumberDefault(String.valueOf(defaultValue));
             if (number.isPresent()) {

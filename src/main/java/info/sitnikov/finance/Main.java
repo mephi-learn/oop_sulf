@@ -51,6 +51,9 @@ public class Main {
         new AmountCreate().register(amountMenu);
         new AmountEdit().register(amountMenu);
 
+        Menu transferMenu = root.submenu("Перечисление средств пользователям");
+        new TransferMenu().register(transferMenu);
+
         Menu statisticMenu = root.submenu("Статистика");
         new StatisticUser().register(statisticMenu);
         new StatisticWallet().register(statisticMenu);

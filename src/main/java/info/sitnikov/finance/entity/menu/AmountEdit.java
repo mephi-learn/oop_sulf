@@ -47,7 +47,7 @@ public final class AmountEdit extends AbstractMenu {
         // Выбор расход или доход
         List<String> targets = Arrays.asList("Расход", "Доход");
         for (int i = 0; i < targets.size(); i++) {
-            context.println("%4d: [%s]", i + 1, targets.get(i));
+            context.println("%4d: %s", i + 1, targets.get(i));
         }
         context.printLine();
         context.print("> ");

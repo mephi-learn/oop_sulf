@@ -10,11 +10,14 @@ import info.sitnikov.finance.repository.Repository;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.*;
 
 public interface Service {
     Authentication getAuthentication();
+
+    List<User> listUsers();
 
     User createUser(String username, String password);
 
@@ -46,6 +49,8 @@ public interface Service {
 
     Optional<Wallet> selectWalletMenu(Context context);
 
+    Optional<User> selectUserMenu(Context context);
+
     Optional<Category> selectCategoryMenu(Context context);
 
     Optional<Amount> selectAmountMenu(Context context, Category category);
@@ -64,6 +69,11 @@ public interface Service {
         @Override
         public Authentication getAuthentication() {
             return this.authentication;
+        }
+
+        @Override
+        public List<User> listUsers() {
+            return this.repository.listUsers();
         }
 
         @Override
@@ -311,6 +321,41 @@ public interface Service {
         }
 
         @Override
+        public Optional<User> selectUserMenu(Context context) {
+            List<User> users = this.repository.listUsers();
+            for (int i = 0; i < users.size(); i++) {
+                User user = users.get(i);
+                context.println("%4d: %s", i + 1, user.getUsername());
+            }
+            context.println("%4d: %s", users.size() + 1, "Назад");
+            context.printLine();
+            context.print("> ");
+
+            String in = context.inputString();
+            User user;
+
+            // Если был выбран последний пункт (назад), то выходим
+            if (in.equals(String.valueOf(users.size() + 1))) {
+                return Optional.empty();
+            }
+
+            try {
+                int index = Integer.parseInt(in) - 1;
+                if (index >= 0 && index < users.size()) {
+                    user = users.get(index);
+                } else {
+                    context.errorln("Неверный номер. %s", in);
+                    return Optional.empty();
+                }
+            } catch (Exception ex) {
+                context.errorln("Ошибка ввода. %s", in);
+                return Optional.empty();
+            }
+
+            return Optional.of(user);
+        }
+
+        @Override
         public Optional<Category> selectCategoryMenu(Context context) {
             // Получаем выбранный кошелёк
             Optional<Wallet> sessionWallet = context.authorized().map(Authentication.Session::wallet);
@@ -322,6 +367,10 @@ public interface Service {
             }
 
             Wallet wallet = sessionWallet.get();
+
+            context.println("");
+            context.println("Выберите категорию:");
+            context.printLine();
 
             List<Category> categories = getCategoryListByWalletId(wallet.getId());
             for (int i = 0; i < categories.size(); i++) {
@@ -359,10 +408,15 @@ public interface Service {
         @Override
         public Optional<Amount> selectAmountMenu(Context context, Category category) {
 
+            context.println("");
+            context.println("Выберите платёж:");
+            context.printLine();
+
             List<Amount> amounts = getAmountListByCategoryId(category.getId());
             for (int i = 0; i < amounts.size(); i++) {
                 Amount amount = amounts.get(i);
-                context.println("%4d: [%d] [%s] [%s]", i + 1, amount.getAmount(), amount.getDescription(), amount.getDate());
+                context.println("%4d: %.2f %s (%s)", i + 1, amount.getAmount(), amount.getDescription(),
+                        amount.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             }
             context.println("%4d: %s", amounts.size() + 1, "Назад");
             context.printLine();

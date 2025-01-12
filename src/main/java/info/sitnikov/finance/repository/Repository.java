@@ -9,6 +9,8 @@ import info.sitnikov.finance.model.Wallet;
 import java.util.*;
 
 public interface Repository {
+    List<User> listUsers();
+
     Optional<User> storeUser(User user);
 
     Optional<User> findUserByUserName(String username);
@@ -38,6 +40,11 @@ public interface Repository {
 
         public Memory(Storage storage) {
             this.storage = storage;
+        }
+
+        @Override
+        public List<User> listUsers() {
+            return new ArrayList<>(this.users.values());
         }
 
         @Override
@@ -98,7 +105,7 @@ public interface Repository {
         @Override
         public List<Amount> getAmountListByCategoryId(String categoryId) {
             Optional<Category> optionalCategory = findCategoryByCategoryId(categoryId);
-            return optionalCategory.map(category -> new ArrayList<>(category.filterAmounts())).orElseGet(ArrayList::new);
+            return optionalCategory.map(category -> new ArrayList<>(category.getAmounts().values())).orElseGet(ArrayList::new);
         }
 
         @Override

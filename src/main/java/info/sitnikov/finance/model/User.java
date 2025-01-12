@@ -6,6 +6,7 @@ import lombok.Data;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Map;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -47,5 +48,18 @@ public class User {
 
     public double expenses() {
         return this.wallets.values().stream().map(Wallet::expenses).reduce(0.0, Double::sum);
+    }
+
+    public Optional<Category> defaultWalletCategory() {
+        for (var wallet : this.getWallets().values()) {
+            if (wallet.getName().equals("default")) {
+                for (var category : wallet.getCategories().values()) {
+                    if (category.getName().equals("default")) {
+                        return Optional.of(category);
+                    }
+                }
+            }
+        }
+        return Optional.empty();
     }
 }
