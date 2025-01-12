@@ -24,8 +24,13 @@ public final class StatisticUser extends AbstractMenu {
         User user = sessionUser.get();
 
         context.println("");
+        context.printLine();
+        context.println("СТАТИСТИКА ПО ПОЛЬЗОВАТЕЛЮ");
+        context.printLine();
+
+        context.println("");
         context.println("Пользователь: %s", user.getUsername());
-        context.println("Баланс: %.2f", user.incomes() - user.expenses());
+        context.println("Баланс: %.2f", user.incomes() + user.expenses());
         context.printLine();
         context.println("Общий доход: %.2f", user.incomes());
         context.println("Доходы по кошелькам:");
@@ -43,6 +48,14 @@ public final class StatisticUser extends AbstractMenu {
                     context.println("\t%s: %.2f", wallet.getName(), Math.abs(wallet.expenses()));
                 });
         context.println("");
+        context.println("Общий баланс: %.2f", user.incomes() + user.expenses());
+        context.println("Баланс по кошелькам:");
+        user.getWallets().values().stream()
+                .filter(wallet -> wallet.incomes() + wallet.expenses() != 0)
+                .forEach(wallet -> {
+                    context.println("\t%s: %.2f", wallet.getName(), wallet.incomes() + wallet.expenses());
+                });
+        context.println("");
         context.println("Бюджеты по кошелькам:");
         user.getWallets().values().stream()
                 .filter(wallet -> wallet.getBudget() != 0)
@@ -55,14 +68,14 @@ public final class StatisticUser extends AbstractMenu {
                 });
         context.println("");
         context.printLine();
-        context.println("ИНФОРМАЦИЯ ПО КОШЕЛЬКАМ");
+        context.println("СТАТИСТИКА ПО КОШЕЛЬКАМ");
         context.printLine();
 
 
         for (var wallet : user.getWallets().values()) {
             context.println("");
             context.println("Кошелёк: %s", wallet.getName());
-            context.println("Баланс: %.2f", wallet.incomes() - wallet.expenses());
+            context.println("Баланс: %.2f", wallet.incomes() + wallet.expenses());
             context.printLine();
             context.println("Общий доход: %.2f", wallet.incomes());
             context.println("Доходы по категориям:");
@@ -72,12 +85,20 @@ public final class StatisticUser extends AbstractMenu {
                         context.println("\t%s: %.2f", category.getName(), category.incomes());
                     });
             context.println("");
-            context.println("Общий расход: %.2f", wallet.expenses());
+            context.println("Общий расход: %.2f", Math.abs(wallet.expenses()));
             context.println("Расходы по категориям:");
             wallet.getCategories().values().stream()
                     .filter(category -> category.expenses() < 0)
                     .forEach(category -> {
                         context.println("\t%s: %.2f", category.getName(), Math.abs(category.expenses()));
+                    });
+            context.println("");
+            context.println("Общий баланс: %.2f", wallet.incomes() + wallet.expenses());
+            context.println("Баланс по категориям:");
+            wallet.getCategories().values().stream()
+                    .filter(category -> category.incomes() + category.expenses() != 0)
+                    .forEach(category -> {
+                        context.println("\t%s: %.2f", category.getName(), category.incomes() + category.expenses());
                     });
             context.println("");
             context.println("Бюджеты по категориям:");

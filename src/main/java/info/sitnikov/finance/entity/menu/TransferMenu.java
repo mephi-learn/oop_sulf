@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public final class TransferMenu extends AbstractMenu {
     public TransferMenu() {
-        super("Создание платежа");
+        super("Создание перевода");
     }
 
     @Override
@@ -36,10 +36,9 @@ public final class TransferMenu extends AbstractMenu {
         Number amountSum = context.selectNumber("Введите сумму платежа");
         amountSum = Math.abs(amountSum.doubleValue());
 
-        // Определяем категорию, откуда будем списывать средства
-        Optional<Category> optionalSourceCategory = sessionUser.get().defaultWalletCategory();
+        // Выбираем категорию, откуда будем списывать средства
+        Optional<Category> optionalSourceCategory = context.service.selectCategoryMenu(context, false);
         if (optionalSourceCategory.isEmpty()) {
-            context.errorln("Не найден каталог для списывания средств");
             return;
         }
         Category sourceCategory = optionalSourceCategory.get();
@@ -77,5 +76,8 @@ public final class TransferMenu extends AbstractMenu {
 
         // Сохраняем репозиторий
         context.service.storeRepository();
+
+        context.println("ПЕРЕВОД ВЫПОЛНЕН УСПЕШНО");
+        context.println("");
     }
 }
