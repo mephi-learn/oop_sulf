@@ -111,6 +111,7 @@ public final class StatisticUser extends AbstractMenu {
                         }
                         context.println("\t%s: %.2f, Оставшийся бюджет: %.2f", category.getName(), Math.abs(category.getBudget()), budget);
                     });
+
             context.println("");
         }
     }

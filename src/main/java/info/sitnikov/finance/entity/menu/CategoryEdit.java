@@ -30,5 +30,8 @@ public final class CategoryEdit extends AbstractMenu {
             context.errorln("Ошибка редактирования. %s", message);
         });
         context.service.storeRepository();
+
+        context.println("КАТЕГОРИЯ ОТРЕДАКТИРОВАНА");
+        context.println("");
     }
 }

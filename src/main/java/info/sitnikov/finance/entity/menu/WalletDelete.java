@@ -17,6 +17,13 @@ public final class WalletDelete extends AbstractMenu {
         }
         Wallet wallet = optionalWallet.get();
 
+        // Получаем кошелёк
+        Optional<Wallet> currentWallet = context.walletSelected();
+        if (currentWallet.isPresent() && currentWallet.get().getId().equals(wallet.getId())) {
+            context.errorln("Нельзя удалить текущий кошелёк");
+            return;
+        }
+
         if (wallet.getName().equals("default")) {
             context.errorln("Данный кошелёк нельзя удалить");
             return;
@@ -40,5 +47,8 @@ public final class WalletDelete extends AbstractMenu {
         });
 
         context.service.storeRepository();
+
+        context.println("КОШЕЛЁК УДАЛЁН");
+        context.println("");
     }
 }

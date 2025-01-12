@@ -229,6 +229,9 @@ public interface Service {
 
         @Override
         public Optional<String> removeAmount(Amount amount) {
+            repository.findCategoryByCategoryId(amount.getCategoryId()).ifPresent(category -> {
+                category.removeAmountById(amount.getId());
+            });
             return Optional.empty();
         }
 
@@ -288,7 +291,7 @@ public interface Service {
             User user = sessionUser.get();
 
             context.println("");
-            context.println(exitWithoutInput ? "Список кошельков": "Выберите кошелёк:");
+            context.println(exitWithoutInput ? "Список кошельков" : "Выберите кошелёк:");
             context.printLine();
 
             List<Wallet> wallets = getWalletListByUserId(user.getUserId());
@@ -333,7 +336,7 @@ public interface Service {
         @Override
         public Optional<User> selectUserMenu(Context context, boolean exitWithoutInput) {
             context.println("");
-            context.println(exitWithoutInput ? "Список пользователей": "Выберите пользователя:");
+            context.println(exitWithoutInput ? "Список пользователей" : "Выберите пользователя:");
             context.printLine();
 
             List<User> users = this.repository.listUsers();
@@ -389,7 +392,7 @@ public interface Service {
             Wallet wallet = sessionWallet.get();
 
             context.println("");
-            context.println(exitWithoutInput ? "Список категорий": "Выберите категорию:");
+            context.println(exitWithoutInput ? "Список категорий" : "Выберите категорию:");
             context.printLine();
 
             List<Category> categories = getCategoryListByWalletId(wallet.getId());
@@ -435,7 +438,7 @@ public interface Service {
         public Optional<Amount> selectAmountMenu(Context context, Category category, boolean exitWithoutInput) {
 
             context.println("");
-            context.println(exitWithoutInput ? "Список платежей": "Выберите платёж:");
+            context.println(exitWithoutInput ? "Список платежей" : "Выберите платёж:");
             context.printLine();
 
             List<Amount> amounts = getAmountListByCategoryId(category.getId());

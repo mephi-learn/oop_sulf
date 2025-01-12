@@ -28,7 +28,7 @@ public final class CategoryDelete extends AbstractMenu {
         }
 
         if (!category.getAmounts().isEmpty()) {
-            context.println("Категория не пуста. Если её удалить, все платежи автоматически удалятся");
+            context.println("Категория не пуста. Если её удалить, все платежи также автоматически удалятся");
             select = context.selectString("Вы всё равно уверены что хотите удалить?[y/N]");
             if (!select.equalsIgnoreCase("y")) {
                 return;
@@ -40,5 +40,8 @@ public final class CategoryDelete extends AbstractMenu {
         });
 
         context.service.storeRepository();
+
+        context.println("КАТЕГОРИЯ УДАЛЕНА");
+        context.println("");
     }
 }

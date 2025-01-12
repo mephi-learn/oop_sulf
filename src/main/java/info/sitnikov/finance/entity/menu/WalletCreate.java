@@ -44,5 +44,8 @@ public final class WalletCreate extends AbstractMenu {
 
         // Сохраняем репозиторий
         context.service.storeRepository();
+
+        context.println("КОШЕЛЁК СОЗДАН");
+        context.println("");
     }
 }

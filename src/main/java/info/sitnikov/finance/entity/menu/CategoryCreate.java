@@ -35,5 +35,8 @@ public final class CategoryCreate extends AbstractMenu {
 
         // Сохраняем репозиторий
         context.service.storeRepository();
+
+        context.println("КАТЕГОРИЯ СОЗДАНА");
+        context.println("");
     }
 }

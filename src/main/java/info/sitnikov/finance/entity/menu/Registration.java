@@ -45,5 +45,8 @@ public final class Registration extends AbstractMenu {
         });
 
         repository.store();
+
+        context.println("ПОЛЬЗОВАТЕЛЬ СОЗДАН");
+        context.println("");
     }
 }

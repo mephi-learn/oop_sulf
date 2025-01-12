@@ -54,6 +54,7 @@ public class Main {
         new AmountCreate().register(amountMenu);
         new AmountList().register(amountMenu);
         new AmountEdit().register(amountMenu);
+        new AmountDelete().register(amountMenu);
 
         Menu transferMenu = root.submenu("Перевод средств пользователям");
         new TransferMenu().register(transferMenu);

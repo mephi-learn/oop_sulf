@@ -92,5 +92,8 @@ public final class AmountEdit extends AbstractMenu {
 
         // Сохраняем репозиторий
         context.service.storeRepository();
+
+        context.println("ПЛАТЁЖ ОТРЕДАКТИРОВАН");
+        context.println("");
     }
 }

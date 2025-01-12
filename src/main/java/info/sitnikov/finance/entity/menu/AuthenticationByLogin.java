@@ -19,7 +19,7 @@ public final class AuthenticationByLogin extends AbstractMenu {
         Optional<Authentication.Session> session = this.authentication.authenticate(login, password);
         if (session.isEmpty()) {
             context.clearSession();
-            context.errorln("Не удалось авторизоваться под пользователем '%s'", login);
+            context.errorln("Не удалось аутентифицироваться под пользователем '%s'", login);
             return;
         }
         session.ifPresent(sess -> {
@@ -32,5 +32,7 @@ public final class AuthenticationByLogin extends AbstractMenu {
 
         session.ifPresent(context::putSession);
 
+        context.println("ПОЛЬЗОВАТЕЛЬ АУТЕНТИФИЦИРОВАН");
+        context.println("");
     }
 }

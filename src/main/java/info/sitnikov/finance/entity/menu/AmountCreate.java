@@ -107,5 +107,8 @@ public final class AmountCreate extends AbstractMenu {
 
         // Сохраняем репозиторий
         context.service.storeRepository();
+
+        context.println("ПЛАТЁЖ СОЗДАН");
+        context.println("");
     }
 }

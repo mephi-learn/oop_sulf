@@ -28,5 +28,8 @@ public final class WalletEdit extends AbstractMenu {
             context.errorln("Ошибка редактирования. %s", message);
         });
         context.service.storeRepository();
+
+        context.println("КОШЕЛЁК ОТРЕДАКТИРОВАН");
+        context.println("");
     }
 }

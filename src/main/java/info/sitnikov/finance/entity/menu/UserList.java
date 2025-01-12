@@ -13,6 +13,7 @@ public final class UserList extends AbstractMenu {
     @Override
     public void accept(Context context) {
         context.service.selectUserMenu(context, true);
+
         context.println("");
     }
 }
