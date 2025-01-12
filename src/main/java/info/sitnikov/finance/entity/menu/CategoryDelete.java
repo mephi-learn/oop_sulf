@@ -11,7 +11,7 @@ public final class CategoryDelete extends AbstractMenu {
 
     @Override
     public void accept(Context context) {
-        Optional<Category> optionalCategory = context.service.selectCategoryMenu(context);
+        Optional<Category> optionalCategory = context.service.selectCategoryMenu(context, false);
         if (optionalCategory.isEmpty()) {
             return;
         }

@@ -47,13 +47,13 @@ public interface Service {
 
     List<Category> getCategoryListByWalletId(String walletId);
 
-    Optional<Wallet> selectWalletMenu(Context context);
+    Optional<Wallet> selectWalletMenu(Context context, boolean exitWithoutInput);
 
-    Optional<User> selectUserMenu(Context context);
+    Optional<User> selectUserMenu(Context context, boolean exitWithoutInput);
 
-    Optional<Category> selectCategoryMenu(Context context);
+    Optional<Category> selectCategoryMenu(Context context, boolean exitWithoutInput);
 
-    Optional<Amount> selectAmountMenu(Context context, Category category);
+    Optional<Amount> selectAmountMenu(Context context, Category category, boolean exitWithoutInput);
 
     void storeRepository();
 
@@ -275,7 +275,7 @@ public interface Service {
             return buffer.toString();
         }
 
-        public Optional<Wallet> selectWalletMenu(Context context) {
+        public Optional<Wallet> selectWalletMenu(Context context, boolean exitWithoutInput) {
             // Получаем аутентифицированного пользователя
             Optional<User> sessionUser = context.authorized().map(Authentication.Session::user);
 
@@ -287,11 +287,21 @@ public interface Service {
 
             User user = sessionUser.get();
 
+            context.println("");
+            context.println(exitWithoutInput ? "Список кошельков": "Выберите кошелёк:");
+            context.printLine();
+
             List<Wallet> wallets = getWalletListByUserId(user.getUserId());
             for (int i = 0; i < wallets.size(); i++) {
                 Wallet wallet = wallets.get(i);
-                context.println("%4d: [%s]", i + 1, wallet.getName());
+                context.println("%4d: %s", i + 1, wallet.getName());
             }
+
+            // Если нужно выйти без ввода, то выходим
+            if (exitWithoutInput) {
+                return Optional.empty();
+            }
+
             context.println("%4d: %s", wallets.size() + 1, "Назад");
             context.printLine();
             context.print("> ");
@@ -321,12 +331,22 @@ public interface Service {
         }
 
         @Override
-        public Optional<User> selectUserMenu(Context context) {
+        public Optional<User> selectUserMenu(Context context, boolean exitWithoutInput) {
+            context.println("");
+            context.println(exitWithoutInput ? "Список пользователей": "Выберите пользователя:");
+            context.printLine();
+
             List<User> users = this.repository.listUsers();
             for (int i = 0; i < users.size(); i++) {
                 User user = users.get(i);
                 context.println("%4d: %s", i + 1, user.getUsername());
             }
+
+            // Если нужно выйти без ввода, то выходим
+            if (exitWithoutInput) {
+                return Optional.empty();
+            }
+
             context.println("%4d: %s", users.size() + 1, "Назад");
             context.printLine();
             context.print("> ");
@@ -356,7 +376,7 @@ public interface Service {
         }
 
         @Override
-        public Optional<Category> selectCategoryMenu(Context context) {
+        public Optional<Category> selectCategoryMenu(Context context, boolean exitWithoutInput) {
             // Получаем выбранный кошелёк
             Optional<Wallet> sessionWallet = context.authorized().map(Authentication.Session::wallet);
 
@@ -369,7 +389,7 @@ public interface Service {
             Wallet wallet = sessionWallet.get();
 
             context.println("");
-            context.println("Выберите категорию:");
+            context.println(exitWithoutInput ? "Список категорий": "Выберите категорию:");
             context.printLine();
 
             List<Category> categories = getCategoryListByWalletId(wallet.getId());
@@ -377,6 +397,12 @@ public interface Service {
                 Category category = categories.get(i);
                 context.println("%4d: %s", i + 1, category.getName());
             }
+
+            // Если нужно выйти без ввода, то выходим
+            if (exitWithoutInput) {
+                return Optional.empty();
+            }
+
             context.println("%4d: %s", categories.size() + 1, "Назад");
             context.printLine();
             context.print("> ");
@@ -406,10 +432,10 @@ public interface Service {
         }
 
         @Override
-        public Optional<Amount> selectAmountMenu(Context context, Category category) {
+        public Optional<Amount> selectAmountMenu(Context context, Category category, boolean exitWithoutInput) {
 
             context.println("");
-            context.println("Выберите платёж:");
+            context.println(exitWithoutInput ? "Список платежей": "Выберите платёж:");
             context.printLine();
 
             List<Amount> amounts = getAmountListByCategoryId(category.getId());
@@ -418,6 +444,12 @@ public interface Service {
                 context.println("%4d: %.2f %s (%s)", i + 1, amount.getAmount(), amount.getDescription(),
                         amount.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             }
+
+            // Если нужно выйти без ввода, то выходим
+            if (exitWithoutInput) {
+                return Optional.empty();
+            }
+
             context.println("%4d: %s", amounts.size() + 1, "Назад");
             context.printLine();
             context.print("> ");

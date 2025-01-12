@@ -27,7 +27,7 @@ public final class TransferMenu extends AbstractMenu {
         }
 
         // Выбираем пользователя
-        Optional<User> optionalUser = context.service.selectUserMenu(context);
+        Optional<User> optionalUser = context.service.selectUserMenu(context, false);
         if (optionalUser.isEmpty()) {
             return;
         }

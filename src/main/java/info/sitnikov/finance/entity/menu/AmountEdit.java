@@ -28,13 +28,13 @@ public final class AmountEdit extends AbstractMenu {
         }
 
         // Выбираем категорию
-        Optional<Category> optionalCategory = context.service.selectCategoryMenu(context);
+        Optional<Category> optionalCategory = context.service.selectCategoryMenu(context, false);
         if (optionalCategory.isEmpty()) {
             return;
         }
 
         // Выбираем платёж
-        Optional<Amount> optionalAmount = context.service.selectAmountMenu(context, optionalCategory.get());
+        Optional<Amount> optionalAmount = context.service.selectAmountMenu(context, optionalCategory.get(), false);
         if (optionalAmount.isEmpty()) {
             return;
         }

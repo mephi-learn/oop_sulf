@@ -1,7 +1,9 @@
 package info.sitnikov.finance.entity.menu;
 
+import info.sitnikov.finance.entity.security.Authentication;
 import info.sitnikov.finance.model.Amount;
 import info.sitnikov.finance.model.Category;
+import info.sitnikov.finance.model.User;
 import info.sitnikov.finance.model.Wallet;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +28,7 @@ public final class AmountCreate extends AbstractMenu {
         }
 
         // Выбираем категорию
-        Optional<Category> optionalCategory = context.service.selectCategoryMenu(context);
+        Optional<Category> optionalCategory = context.service.selectCategoryMenu(context, false);
         if (optionalCategory.isEmpty()) {
             return;
         }
@@ -75,11 +77,33 @@ public final class AmountCreate extends AbstractMenu {
             return;
         }
 
-        Optional<Amount> amount = context.service.createAmountInCategory(optionalCategory.get(), description, amountSum.doubleValue(), dateTime);
+        Category category = optionalCategory.get();
+
+        Optional<Amount> amount = context.service.createAmountInCategory(category, description, amountSum.doubleValue(), dateTime);
         if (amount.isEmpty()) {
             context.errorln("Проблемы добавления платежа: %s", description);
             return;
         }
+
+        // Предупреждаем, если превышен бюджет категории
+        if (category.getBudget() != 0 && category.getBudget() > category.expenses()) {
+            context.errorln("ПРЕДУПРЕЖДЕНИЕ! Превышен бюджет категории: %.2f, текущие расходы: %.2f", Math.abs(category.getBudget()),
+                    Math.abs(category.expenses()));
+        }
+        ;
+
+        // Получаем аутентифицированного пользователя
+        Optional<User> sessionUser = context.authorized().map(Authentication.Session::user);
+
+        // Если пользователь не аутентифицирован, то сообщаем, что данный пункт меню для него недоступен
+        sessionUser.ifPresent(user -> {
+            double balance = user.incomes() + user.expenses();
+            if (balance < 0) {
+                context.errorln("ПРЕДУПРЕЖДЕНИЕ! Расход (%.2f) превысили доход (%.2f). Дефицит: %.2f", Math.abs(user.expenses()), user.incomes(), Math.abs(balance));
+            }
+            ;
+        });
+
 
         // Сохраняем репозиторий
         context.service.storeRepository();

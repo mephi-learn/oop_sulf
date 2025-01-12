@@ -11,7 +11,7 @@ public final class WalletDelete extends AbstractMenu {
 
     @Override
     public void accept(Context context) {
-        Optional<Wallet> optionalWallet = context.service.selectWalletMenu(context);
+        Optional<Wallet> optionalWallet = context.service.selectWalletMenu(context, false);
         if (optionalWallet.isEmpty()) {
             return;
         }

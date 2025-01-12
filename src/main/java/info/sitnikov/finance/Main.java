@@ -34,21 +34,25 @@ public class Main {
         Menu userMenu = root.submenu("Управление пользователями");
         Authentication authentication = Authentication.create(repo);
         new AuthenticationByLogin(authentication).register(userMenu);
+        new UserList().register(userMenu);
         new Registration(repo).register(userMenu);
 
         Menu walletMenu = root.submenu("Управление кошельками");
         new WalletSelect().register(walletMenu);
+        new WalletList().register(walletMenu);
         new WalletCreate().register(walletMenu);
         new WalletEdit().register(walletMenu);
         new WalletDelete().register(walletMenu);
 
         Menu categoryMenu = root.submenu("Управление категориями");
         new CategoryCreate().register(categoryMenu);
+        new CategoryList().register(categoryMenu);
         new CategoryEdit().register(categoryMenu);
         new CategoryDelete().register(categoryMenu);
 
         Menu amountMenu = root.submenu("Управление платежами");
         new AmountCreate().register(amountMenu);
+        new AmountList().register(amountMenu);
         new AmountEdit().register(amountMenu);
 
         Menu transferMenu = root.submenu("Перечисление средств пользователям");
